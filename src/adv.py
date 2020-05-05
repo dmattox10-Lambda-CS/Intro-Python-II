@@ -146,6 +146,7 @@ while True:
         if cmd[0] == 'w':
             if 'w' in room[Player.Location(player)].Doors():
                 player.Move(room[Player.Location(player)].w_to)
+                #player.Move(room[player.Location()].w_to) NOT WORKING
         if cmd[0] == 'help':
             print('[use $ITEM] to use an item\n[drop $ITEM] to drop item\n[take $ITEM] to take item\n[use $ITEM] to use item')
         if cmd[0] == 'cheat':
