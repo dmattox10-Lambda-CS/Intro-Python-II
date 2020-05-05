@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from item import Item, Key
 # Declare all the rooms
 
 room = {
@@ -33,6 +34,16 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+# Create Items (works)
+
+item = {
+    'torch': Item('torch', 'Lights the way!')
+}
+
+# Add Items to rooms (works)
+
+room['foyer'].AddItemToRoom(item['torch'])
+
 #
 # Main
 #
@@ -52,7 +63,7 @@ room['treasure'].s_to = room['narrow']
 
 name = input('Enter your name... ')
 player = Player(name, room['outside'])
-print('[q] to quit, [n,e,s,w] to move, [take $ITEM] to take, [drop $ITEM] to drop')
+print('[q] to quit, [n,e,s,w] to move, [help] for more')
 while True:
     output = player.Surroundings()
     print(f'{output}')
@@ -74,12 +85,34 @@ while True:
         if cmd[0] == 'w':
             if 'w' in room[Player.Location(player)].Doors():
                 player.Move(room[Player.Location(player)].w_to)
+        if cmd[0] == 'help':
+            print('[use $ITEM] to use an item\n[drop $ITEM] to drop item\n[take $ITEM] to take item\n[use $ITEM] to use item')
+        if cmd[0] == 'cheat':
+            room[Player.Location(player)].ListItems()
+            room[Player.Location(player)].ListDoors()
         else:
             pass
 
     if len(cmd) == 2:
         item = cmd[1]
         if cmd[0] == 'take':
+            if player.HasLight():
+                pass
+            elif item == 'torch':
+                print(room[Player.Location(player)].Items()) # Prints OBJECT
+                if item in room[Player.Location(player)].Items():
+                    print(room[Player.Location(player)].Items()) # Prints nothing
+                    room[Player.Location(player)].AddItemToPlayer(item[item])
+            else:
+                print('Good Luck finding that in the dark!')
+        elif cmd[0] == 'drop':
             pass
-        if cmd[0] == 'drop':
+        elif cmd[0] == 'use':
+            if item in player.items:
+                if item.name == 'torch':
+                    room[Player.Location(player)].listItems()
+                    room[Player.Location(player)].listDoors()
+                else:
+                    pass
+        else:
             pass
