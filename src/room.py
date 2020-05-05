@@ -1,7 +1,7 @@
 # Implement a class to hold room information. This should have name and
 # description attributes.
 class Room:
-    def __init__(self, name, location, description, n_to=None, e_to=None, s_to=None, w_to=None):
+    def __init__(self, name, location, description, n_to=None, e_to=None, s_to=None, w_to=None, items=None):
         self.name = name
         self.description = description
         self.n_to = n_to
@@ -9,21 +9,44 @@ class Room:
         self.s_to = s_to
         self.w_to = w_to
         self.doors = []
+        self.items = []
         
     def Doors(self):
         if self.n_to is not None:
             self.doors.append('n')
-            print(f'Room {self.name} has a door to the N')
+            # print(f'Room {self.name} has a door to the N')
         if self.e_to is not None:
             self.doors.append('e')
-            print(f'Room {self.name} has a door to the E')
+            #print(f'Room {self.name} has a door to the E')
         if self.s_to is not None:
             self.doors.append('s')
-            print(f'Room {self.name} has a door to the S')
+            #print(f'Room {self.name} has a door to the S')
         if self.w_to is not None:
             self.doors.append('w')
-            print(f'Room {self.name} has a door to the W')
+            #print(f'Room {self.name} has a door to the W')
         return self.doors
+
+    def Items(self):
+        return self.items
+
+    def ListDoors(self):
+        for door in self.doors:
+            print(f'Door to the {door}')
+
+    def ListItems(self):
+        for item in self.items:
+            print(f'This room contains a/an {item.name}')
+
+    def AddItemToRoom(self, item):
+        self.items.append(item)
+
+    def AddItemToPlayer(self, item, player):
+        if item in self.items:
+            self.items.remove(item)
+            player.AddItem(item)
+
+    def interact(self, item, player):
+        pass
 
     def __str__(self):
         return f'current location: {self.name}, {self.description}'

@@ -6,11 +6,20 @@ class Player:
         self.current_room = current_room
         self.items = items
 
-    def Take(self, item):
-        pass
+    def AddItem(self, item):
+        self.items.append(item)
+        print(f'Got item {item.name}!')
 
-    def Drop(self, item):
-        pass
+    def Drop(self, item, room):
+        if item in self.items:
+            self.items.remove(item)
+            room.AddItemToRoom(item)
+
+    def HasLight(self):
+        if 'torch' in self.items:
+            return True
+        else:
+            return False
 
     def Move(self, room):
         self.current_room = room
