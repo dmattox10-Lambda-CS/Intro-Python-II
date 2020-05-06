@@ -1,7 +1,7 @@
 # Write a class to hold player information, e.g. what room they are in
 # currently.
 class Player:
-    def __init__(self, name, current_room, items={}):
+    def __init__(self, name, current_room, items=[]):
         self.name = name
         self.current_room = current_room
         self.items = items
@@ -15,11 +15,8 @@ class Player:
             self.items.remove(item)
             room.AddItemToRoom(item)
 
-    def HasLight(self):
-        if 'torch' in self.items:
-            return True
-        else:
-            return False
+    def Items(self):
+        return self.items
 
     def Move(self, room):
         self.current_room = room

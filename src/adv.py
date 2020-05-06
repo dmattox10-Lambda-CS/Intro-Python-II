@@ -97,12 +97,15 @@ room['E4'].n_to = room['E5']
 # Create Items (works)
 
 item = {
-    'torch': Item('torch', 'Lights the way!')
+    'torch': Item('torch', 'Lights the way!'),
+    'test': Item('test', 'Tests the system!')
 }
 
 # Add Items to rooms (works)
 
 room['foyer'].AddItemToRoom(item['torch'])
+room['A1'].AddItemToRoom(item['torch'])
+room['A1'].AddItemToRoom(item['test'])
 
 #
 # Main
@@ -126,45 +129,60 @@ name = input('Enter your name... ')
 player = Player(name, room['A1'])
 print('[q] to quit, [n,e,s,w] to move, [help] for more')
 while True:
-    output = player.Surroundings()
-    print(f'{output}')
-
     cmd = input(f'{player}, enter a command... ').split(' ')
 
     if len(cmd) == 1:
         if cmd[0] == 'q':
             exit(0)
         if cmd[0] == 'n':
-            if 'n' in room[Player.Location(player)].Doors():
-                player.Move(room[Player.Location(player)].n_to)
+            if player.current_room.n_to:
+                player.current_room = player.current_room.n_to
+                print(f'{player.current_room.description}')
+            else:
+                print('There is no path in that direction!')
         if cmd[0] == 'e':
-            if 'e' in room[Player.Location(player)].Doors():
-                player.Move(room[Player.Location(player)].e_to)
+            if player.current_room.e_to:
+                player.current_room = player.current_room.e_to
+                print(f'{player.current_room.description}')
+            else:
+                print('There is no path in that direction!')
         if cmd[0] == 's':
-            if 's' in room[Player.Location(player)].Doors():
-                player.Move(room[Player.Location(player)].s_to)
+            if player.current_room.s_to:
+                player.current_room = player.current_room.s_to
+                print(f'{player.current_room.description}')
+            else:
+                print('There is no path in that direction!')
         if cmd[0] == 'w':
-            if 'w' in room[Player.Location(player)].Doors():
-                player.Move(room[Player.Location(player)].w_to)
-                #player.Move(room[player.Location()].w_to) NOT WORKING
+            if player.current_room.w_to:
+                player.current_room = player.current_room.w_to
+                print(f'{player.current_room.description}')
+            else:
+                print('There is no path in that direction!')
         if cmd[0] == 'help':
             print('[use $ITEM] to use an item\n[drop $ITEM] to drop item\n[take $ITEM] to take item\n[use $ITEM] to use item')
         if cmd[0] == 'cheat':
-            room[Player.Location(player)].ListItems()
-            room[Player.Location(player)].ListDoors()
+            pass
+        if cmd[0] == 'look':
+            if item['torch'] in player.Items():
+                room[Player.Location(player)].ListItems()
+            else:
+                print('Good luck finding anything in the dark!')
         else:
             pass
 
     if len(cmd) == 2:
-        item = cmd[1]
+        itemcmd = cmd[1]
         if cmd[0] == 'take':
-            if player.HasLight():
-                pass
-            elif item == 'torch':
-                print(room[Player.Location(player)].Items()) # Prints OBJECT
-                if item in room[Player.Location(player)].Items():
-                    print(room[Player.Location(player)].Items()) # Prints nothing
-                    room[Player.Location(player)].AddItemToPlayer(item[item])
+            if item['torch'] in player.Items():
+                if item[itemcmd] in player.current_room.Items():
+                    player.current_room.AddItemToPlayer(item[itemcmd], player)
+                else:
+                    print(f'Didnt find {itemcmd}')
+            elif itemcmd == 'torch':
+                #print(room[Player.Location(player)].Items()) # Prints OBJECT
+                if item[itemcmd] in player.current_room.Items():
+                    #print(room[Player.Location(player)].Items()) # Prints nothing
+                    player.current_room.AddItemToPlayer(item[itemcmd], player)
             else:
                 print('Good Luck finding that in the dark!')
         elif cmd[0] == 'drop':
@@ -172,8 +190,7 @@ while True:
         elif cmd[0] == 'use':
             if item in player.items:
                 if item.name == 'torch':
-                    room[Player.Location(player)].listItems()
-                    room[Player.Location(player)].listDoors()
+                    player.current_room.listItems()
                 else:
                     pass
         else:
