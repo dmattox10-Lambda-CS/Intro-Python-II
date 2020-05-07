@@ -103,9 +103,11 @@ item = {
 
 # Add Items to rooms (works)
 
-room['foyer'].AddItemToRoom(item['torch'])
+# room['foyer'].AddItemToRoom()
 room['A1'].AddItemToRoom(item['torch'])
 room['A1'].AddItemToRoom(item['test'])
+# room['A1'].AddItemToRoom(Item('torch', 'Lights the way!'))
+# room['A1'].AddItemToRoom(Item('test', 'Tests the system!'))
 
 #
 # Main
@@ -129,6 +131,7 @@ name = input('Enter your name... ')
 player = Player(name, room['A1'])
 print('[q] to quit, [n,e,s,w] to move, [help] for more')
 while True:
+    print('\n')
     cmd = input(f'{player}, enter a command... ').split(' ')
 
     if len(cmd) == 1:
@@ -140,12 +143,14 @@ while True:
                 print(f'{player.current_room.description}')
             else:
                 print('There is no path in that direction!')
+
         if cmd[0] == 'e':
             if player.current_room.e_to:
                 player.current_room = player.current_room.e_to
                 print(f'{player.current_room.description}')
             else:
                 print('There is no path in that direction!')
+
         if cmd[0] == 's':
             if player.current_room.s_to:
                 player.current_room = player.current_room.s_to
@@ -186,12 +191,19 @@ while True:
             else:
                 print('Good Luck finding that in the dark!')
         elif cmd[0] == 'drop':
-            pass
+            if item[itemcmd] in player.items:
+                player.Drop(item[itemcmd], player.current_room)
         elif cmd[0] == 'use':
-            if item in player.items:
-                if item.name == 'torch':
-                    player.current_room.listItems()
+            if item[itemcmd] in player.items:
+                if item[itemcmd].name == 'torch':
+                    player.current_room.ListItems()
+                if item[itemcmd].name == 'test':
+                    print('The system is working!')
                 else:
                     pass
         else:
             pass
+    
+    if player.current_room.name == 'E5':
+        print('You win!')
+        exit(0)
